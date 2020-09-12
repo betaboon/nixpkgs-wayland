@@ -1,0 +1,34 @@
+diff --git a/meson.build b/meson.build
+index 86e7ba4..3662241 100644
+--- a/meson.build
++++ b/meson.build
+@@ -100,7 +100,8 @@ sysconfdir = get_option('sysconfdir')
+ conf_data = configuration_data()
+ conf_data.set('prefix', prefix)
+ 
+-add_project_arguments('-DSYSCONFDIR="/@0@"'.format(join_paths(prefix, sysconfdir)), language : 'cpp')
++add_project_arguments('-DSYSCONFDIR="/@0@"'.format(sysconfdir), language : 'cpp')
++add_project_arguments('-DNIX_SYSCONFDIR="/@0@"'.format(join_paths(prefix, sysconfdir)), language : 'cpp')
+ 
+ if systemd.found()
+   user_units_dir = systemd.get_pkgconfig_variable('systemduserunitdir')
+diff --git a/src/client.cpp b/src/client.cpp
+index e0515d4..a1a92dd 100644
+--- a/src/client.cpp
++++ b/src/client.cpp
+@@ -162,6 +162,7 @@ std::tuple<const std::string, const std::string> waybar::Client::getConfigs(
+                                           "$HOME/.config/waybar/config",
+                                           "$HOME/waybar/config",
+                                           SYSCONFDIR "/xdg/waybar/config",
++                                          NIX_SYSCONFDIR "/xdg/waybar/config",
+                                           "./resources/config",
+                                       })
+                                     : config;
+@@ -170,6 +171,7 @@ std::tuple<const std::string, const std::string> waybar::Client::getConfigs(
+                                       "$HOME/.config/waybar/style.css",
+                                       "$HOME/waybar/style.css",
+                                       SYSCONFDIR "/xdg/waybar/style.css",
++                                      NIX_SYSCONFDIR "/xdg/waybar/style.css",
+                                       "./resources/style.css",
+                                   })
+                                 : style;

@@ -26,6 +26,10 @@ stdenv.mkDerivation rec {
     sha256 = metadata.sha256;
   };
 
+  patches = [
+    ./load-configuration-from-etc.patch
+  ];
+
   postPatch = ''
       sed -i "s/\([ \t]\)version: '\(.*\)',/\1version: '\2-${stdenv.lib.substring 0 8 metadata.rev} (branch \\\'${metadata.branch}\\\')',/" meson.build
   '';
@@ -45,7 +49,7 @@ stdenv.mkDerivation rec {
   ];
   mesonFlags = [
     "-Dauto_features=enabled"
-    "-Dout=${placeholder "out"}"
+    # "-Dout=${placeholder "out"}"
     "-Dsystemd=disabled"
   ];
 
